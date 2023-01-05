@@ -33,7 +33,7 @@ if os.environ.get("DJANGO_ALLOWED_HOSTS") is not None:
 # Application definition
 
 # Application definition
-SITE_ID = 2
+SITE_ID = 1
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
