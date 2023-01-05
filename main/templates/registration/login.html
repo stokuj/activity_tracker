@@ -7,4 +7,10 @@
 <p>Don't have an account? Create one <a href="/register">here</p>
 <button type="submit" class="btn btn-success">Login</button>
 </form>
+
+<br>
+<br>
+{% load socialaccount %}
+<a href="{% provider_login_url 'google' %}"> <button type="button" class="btn btn-primary">Use Google</button></a>
+
 {% endblock %}

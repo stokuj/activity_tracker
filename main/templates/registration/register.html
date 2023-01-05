@@ -4,7 +4,14 @@
 {% block content %}
 <form method="post">
 {% csrf_token %}{{form|crispy}}
-<p>Already registered? Login <a href="/login">here</p>
-<button type="submit" class="btn btn-success">Register</button>
+    <p>Already registered? Login <a href="/login">here</p>
+    <button type="submit" class="btn btn-success">Register</button>
 </form>
+
+<br>
+<br>
+{% load socialaccount %}
+<a href="{% provider_login_url 'google' %}"> <button type="button" class="btn btn-primary">Use Google</button></a>
+
+
 {% endblock %}
