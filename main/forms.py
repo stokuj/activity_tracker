@@ -1,0 +1,97 @@
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from .models import Post, Profile, Comment, Activity, MyCsv
+from django.core.exceptions import ValidationError
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True, )
+    first_name = forms.RegexField(
+        min_length=4,
+        max_length=12,
+        regex=r'^([a-zA-Z]+?)([-\s\'][a-zA-Z]+)*?$',
+        error_messages={'invalid': ("Wrong first name format!")}
+    )
+    last_name = forms.RegexField(
+        min_length=4,
+        max_length=12,
+        regex=r'^([a-zA-Z]+?)([-\s\'][a-zA-Z]+)*?$',
+        error_messages={'invalid': ("Wrong last name format!")}
+    )
+
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        if User.objects.filter(email=data).exists():
+            raise forms.ValidationError("This email already used")
+        return data
+
+    class META:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2', 'first_name', 'last_name']
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ["text"]
+
+class ActivityForm(forms.ModelForm):
+    class Meta:
+        model = Activity
+        fields = ["activity_name", "activity_category", "activity_duration"]
+
+class ProfileForm(forms.ModelForm):
+    profileimg = forms.ImageField(required=False ,widget=forms.FileInput(attrs={'class': 'form-control-file'}))
+    userText = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}))
+    isPrivate = forms.BooleanField(required=False)
+
+    class Meta:
+        model = Profile
+        fields = ['userText', 'profileimg','isPrivate']
+
+class UpdateUserForm(forms.ModelForm):
+    username = forms.CharField(max_length=100,
+                               required=True,
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+    email = forms.EmailField(required=True,
+                             widget=forms.TextInput(attrs={'class': 'form-control'}))
+    first_name = forms.RegexField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        min_length=4,
+        max_length=12,
+        regex=r'^([a-zA-Z]+?)([-\s\'][a-zA-Z]+)*?$',
+        error_messages={'invalid': ("Wrong first name format!")}
+    )
+    last_name = forms.RegexField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        min_length=4,
+        max_length=12,
+        regex=r'^([a-zA-Z]+?)([-\s\'][a-zA-Z]+)*?$',
+        error_messages={'invalid': ("Wrong last name format!")}
+    )
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'first_name', 'last_name']
+def validate2(value):
+    tmp = str(value)
+    tmp = tmp.split('.')
+    print(tmp[1])
+    if  tmp[1] != 'data.csv':
+        raise ValidationError(
+            ('%(value)s File is not in csv format'),
+            params={'value': value},
+        )
+
+def validate_file_extension(value):
+    import os
+    from django.core.exceptions import ValidationError
+    ext = os.path.splitext(value.name)[1]  # [0] returns path+filename
+    valid_extensions = ['.csv']
+    if not ext.lower() in valid_extensions:
+        raise ValidationError('Unsupported file extension.')
+
+class CsvForm(forms.ModelForm):
+    file_name = forms.FileField( max_length=100,validators=[validate_file_extension])
+
+    class Meta:
+        model = MyCsv
+        fields = ('file_name',)

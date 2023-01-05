@@ -1,0 +1,70 @@
+{% extends "main/base.html" %}
+{% block title %}Create a Activity{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<form method="post" enctype="multipart/form-data" class="form-group">
+{% csrf_token %}{{form|crispy}}
+<br>
+<div class="position-relative">
+    <div class="position-absolute top-0 start-0">   
+        <button type="submit" class="btn btn-success">Add Activity</button><br>
+    </div>
+    </form>
+    <div class="position-absolute top-0 end-0">     
+        <form action="{% url 'downloadexcel' %}" method="post">
+            {% csrf_token %}
+             <button type="submit" class="btn btn-outline-dark" name='mybtn1' value={{excel_path}}>Download data</button>
+        </form>
+    </div>
+</div>
+<div class="position-relative">
+    <div class="position-absolute bottom-0 end-0">  
+        <a href="/upload/">
+            <button type="submit" class="btn btn-outline-dark">Upload data</button>
+        </a>
+    </div>
+</div>
+<div class="position-relative">
+    <div class="position-absolute top-0 start-50">   
+        <a href="/show_report/">
+            <button type="submit" class="btn btn-outline-dark">Show analyssis</button>
+        </a>
+    </div>
+</div>
+<br>
+<br>
+<hr>
+{% for x in list_of_activities reversed %}
+<div class="card mt-2">
+    <div class="card-body d-flex flex-row justify-content-between">
+        <div class="card mt-1">
+            <h4 class="card-title">{{x.activity_name}}</h4>
+            <div class="card-body">
+                <h8>{{x.activity_category}}</h8> for    
+                <h8>{{x.activity_duration}}</h8>
+            </div> 
+            <br />
+        </div>
+        <div> 
+            {% if user == x.author %}
+            <form method="post">
+                 {% csrf_token %}
+                 <button type="submit" class="btn btn-danger" name="activity-id" value="{{x.id}}"> Delete activity </button>
+            </form>
+            <br>
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary" name="activity-post" value="{{x.id}}"> Post activity </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="card-footer text-muted">
+        {{x.created_at}}
+    </div>
+</div> 
+{% empty %}
+<p>You will see your activities here</p>
+{% endfor %} 
+{% endblock %}

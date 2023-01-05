@@ -1,0 +1,63 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Post page{% endblock title %}
+{% block content %}
+<div class="card mt-2">
+        <div class="card-header">
+            <a href="/profile/{{post_obj.author.username}}"  >
+                @{{post_obj.author.username}}
+            </a>
+        </div>
+    <div class="card-body d-flex flex-row justify-content-between">
+        <div class="card mt-2">
+            <h5 class="card-title">{{post_obj.text}}</h5>
+            <p>{{post_obj.tags}}</p>
+            <br />
+        </div>
+    </div>
+    <div class="card-footer text-muted">
+        {{post_obj.created_at}}
+    </div>
+</div>
+
+<form method="post">
+    <h2 class="font-semibold text-lg">Comments:</h2>
+    {% csrf_token %}
+    {% if user.is_authenticated %}
+    <input type="text" name="comment_text" placeholder="Comment post...">
+    <button type="submit" class="btn btn-success">Comment</button>
+    {% else %}
+    {% endif %}
+</form> 
+{% for comment in comments_list%}
+<div class="card mt-2">
+    <div class="card-header"><a href="/profile/{{comment.author}}" ><strong>@{{comment.author}}</strong></a></div>
+    <div class="card-body d-flex flex-row justify-content-between">
+        <div>
+            <h5 class="card-title">{{comment.text}}</h5>
+            <p>{{comment.created_at}}</p>
+            <br />
+        </div>
+        <div> 
+            {% if user == comment.author %}
+             <form method="post">
+                 {% csrf_token %}
+                 <button type="submit" class="btn btn-danger" name="comment_id" value="{{comment.id}}"> Delete </button>
+             </form>
+            {% else %}
+                {% if user.is_superuser %}
+                <form action="{% url 'downloadexcel3' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" name="comment_id_admin" value="{{comment.id}}">Delete post as admin</button>
+                </form>
+                {% endif %}
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% empty %}
+<p>No Comments yet</p>
+{% endfor %}
+{% endblock content %}

@@ -1,0 +1,28 @@
+{% extends "main/base.html" %}
+{% block title %}Upload csv{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<br>
+<h1>Upload</h1>
+<h5>You can upload you activities here.</h5>
+<hr>
+
+<div class="container">
+    <form action="" method="POST" enctype="multipart/form-data" class="form-control" >    
+    <div class="form-check mb-3">
+        <input type="checkbox" class="form-check-input" id="validationFormCheck1" required>
+        <label class="form-check-label" for="validationFormCheck1">I want upload data that will overwrite previous one</label>
+        <div class="invalid-feedback">U must check this checkbox </div>
+    </div>
+
+    <hr>
+    {% csrf_token %}
+    {{form|crispy}}
+    <hr>
+    <button type="submit" class="btn btn-warning">Upload</button>
+    </form>
+</div>
+<br>
+<p class="text-danger">Previous activities will be deleted!</p>
+
+{% endblock %}

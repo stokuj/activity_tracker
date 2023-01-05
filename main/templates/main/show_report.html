@@ -1,0 +1,46 @@
+{% extends 'main/base.html' %} {% block title %}Analysis{% endblock %}
+
+{% block content %}
+    <br>
+    <div class="position-relative">
+        <div class="position-absolute top-0 end-0"> 
+            <a href="/create_activity/">
+                <button type="submit" class="btn btn-outline-dark">Go back</button>
+            </a>
+        </div>
+        <div class="position-absolute top-0 start-0"> 
+            <a href="/show_report2/">
+                <button type="submit" class="btn btn-outline-dark">Pie chart</button>
+            </a>
+        </div>
+    </div>
+    <br>
+    <br>
+
+    
+    {% autoescape off %}
+    {{ plot_div }}
+    {% endautoescape %}
+
+    <hr>
+    {% for x in list_of_activities reversed %}
+    <div class="card mt-2">
+        <div class="card-body d-flex flex-row justify-content-between">
+            <div class="card mt-1">
+                <h4 class="card-title">{{x.activity_name}}</h4>
+                <div class="card-body">
+                    <h8>{{x.activity_category}}</h8> for    
+                    <h8>{{x.activity_duration}}</h8>
+                </div> 
+                <br />
+            </div>
+        </div>
+        
+        <div class="card-footer text-muted">
+            {{x.created_at}}
+        </div>
+    </div> 
+    {% empty %}
+    <p>You will see your activities here</p>
+    {% endfor %} 
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "main/base.html" %}
+{% block title %}Profile Page{% endblock title %}
+{% block content %}
+    <div class="form-content">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="small mb-1">Username:</label>
+                            {{ user_form.username }}
+                        <label class="small mb-1">Email:</label>
+                            {{ user_form.email }}
+                        <label class="small mb-1">First Name:</label>
+                            {{ user_form.first_name }}
+                        <label class="small mb-1">Last Name:</label>
+                            {{ user_form.last_name }}
+                    </div>
+                </div>
+                
+            </div>
+            <br><br>
+            <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
+            <br>
+            <br>
+            {% if user_form.errors %}
+            <div class="alert alert-danger" role="alert">
+                <div id="form_errors">
+                    {% for key, value in user_form.errors.items %}
+                        <strong>{{ value }}</strong>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <hr>
+            <a href="/password-change/" class="btn btn-dark btn-lg">Change password</a>
+            <a href="/update_profile/" class="btn btn-dark btn-lg">Update profile</a>
+
+            
+        </form>
+    </div>
+{% endblock content %}

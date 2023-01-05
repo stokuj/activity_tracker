@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+{% block title %}Profile Page{% endblock title %}
+{% block content %}
+
+    <div class="form-content">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <hr>
+                        <label class="small mb-1">Change Avatar:</label>
+                        {{ profile_form.profileimg }}
+                    </div>
+                    <hr>
+                    <label class="small mb-1">Bio:</label> {{ profile_form.userText }}
+                    <hr>
+                    <label class="small mb-1">Is profile private:</label> {{ profile_form.isPrivate }}
+                    {% if profile_form.isPrivate == True %}
+
+                    {% else %}
+
+                    {% endif %}
+                </div>
+            </div>
+            <br><br>
+            <button type="submit" class="btn btn-dark btn-lg">Save Changes</button>
+            <button type="reset" class="btn btn-dark btn-lg">Reset</button>
+        </form>
+    </div>
+    <br><br>
+    <hr>
+    <a href="/password-change/" class="btn btn-dark btn-lg">Change password</a>
+    <a href="/account_settings/" class="btn btn-dark btn-lg">Account settings</a>
+{% endblock content %}
