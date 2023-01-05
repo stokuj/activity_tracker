@@ -288,7 +288,14 @@ def search(request):
 #@login_required(login_url="/login")
 def profile(request, pk):
     user_obj = User.objects.get(username=pk)
-    user_profile = Profile.objects.get(user=user_obj)
+    
+    try:
+        user_profile = Profile.objects.get(user=user_obj)
+    except:
+        new_profile = Profile.objects.create(user=user_obj)
+        new_profile.save()
+        user_profile = Profile.objects.get(user=user_obj)
+
     posts = Post.objects.filter(author_id=user_obj.id)
     posts.order_by('created_at')
 
