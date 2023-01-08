@@ -43,7 +43,6 @@ def register(request):
 
 # created with refacting used in register
 
-
 def _extracted_from_register_5(form, request):
     password = form.cleaned_data.get('password1')
     username = form.cleaned_data.get('username')
@@ -114,8 +113,6 @@ def home(request):
             return redirect(reverse('/search/'))
 
     return render(request, 'main/home.html', {"posts": full_post_list, 'suggestions_username_profile_list': suggestions_username_profile_list[:4]})
-
-
 
 def search(request):
     username_profile = []
@@ -323,25 +320,6 @@ def save_csv(request):
     return response
 
 
-@login_required(login_url="/login")
-def search(request):
-    user_object = User.objects.get(username=request.user.username)
-    user_profile = Profile.objects.get(user=user_object)
-    username_profile = []
-    username_profile_list = []
-
-    if request.method == 'POST':
-        search_val = request.POST['search_val']
-        username_object = User.objects.filter(username__icontains=search_val)
-
-        username_profile.extend(users.id for users in username_object)
-        for ids in username_profile:
-            profile_lists = Profile.objects.filter(user=ids)
-            username_profile_list.append(profile_lists)
-
-        username_profile_list = list(chain(*username_profile_list))
-
-    return render(request, 'main/search.html', {'user_profile': user_profile, 'username_profile_list': username_profile_list})
 
 
 @login_required(login_url="/login")

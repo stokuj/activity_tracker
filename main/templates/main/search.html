@@ -2,7 +2,8 @@
 {% block content %}
 <br>
 <form method="post">
-    <h2 class="font-semibold text-lg">Search...</h2>
+    <h2 class="font-semibold text-lg">Search</h2>
+    <p> You can search user here by their names.</p>
     {% csrf_token %}
     <input type="text" name="search_val" placeholder="Type username: ">&nbsp; &nbsp;
     <button type="submit" class="btn btn-dark btn-lg">>Search</button>
