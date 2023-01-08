@@ -45,9 +45,7 @@
 {% endif %}
 <hr>
 <div class="uname">
-    {% if user_obj.profile.isPrivate %}
-    This profile is private!
-    {% else %}
+    {% if user_obj.profile.isPrivate == False or user.is_authenticated  %}
         {% for post in posts reversed%}
         <div class="card mt-2">
             <div class="card-header"><strong>@{{post.post.author.username}}</strong></div>
@@ -88,9 +86,11 @@
                 {{post.post.created_at}}
             </div>
         </div> 
-    {% empty %}
-    <p>No posts yet</p>
-    {% endfor %}
+        {% empty %}
+        <p>No posts yet</p>
+        {% endfor %}
+    {% else %}
+        This profile is private!
     {% endif %}
 </div>
 {% endblock %}
