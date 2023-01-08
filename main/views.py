@@ -76,8 +76,7 @@ def home(request):
     full_post_list = []
     comments_list = []
     for post in feed_list:
-        comments_set = Comment.objects.filter(
-            post=post).order_by('-created_at')
+        comments_set = Comment.objects.filter(post=post).order_by('created_at')
         comments_list.append(comments_set)
         comments_list_final = list(chain(*comments_list))
         comments_list_final.sort(key=lambda x: x.created_at, reverse=False)
@@ -108,7 +107,14 @@ def home(request):
 
     suggestions_username_profile_list = list(chain(*username_profile_list))
 
+    if post_id := request.POST.get("post-id2"):
+        if request.method == "POST":
+            post = Post.objects.filter(id=post_id).first()
+            post.delete()
+            return redirect(reverse('/search/'))
+
     return render(request, 'main/home.html', {"posts": full_post_list, 'suggestions_username_profile_list': suggestions_username_profile_list[:4]})
+
 
 
 def search(request):
@@ -212,61 +218,6 @@ def contact(request):
 # Login Nedded
 ###########################################################################################
 
-
-@login_required(login_url="/login")
-def home(request):
-    feed = []
-    user_following = Followers.objects.filter(follower=request.user.id)
-
-    user_following_list = [users.followee for users in user_following]
-    for usernames in user_following_list:
-        feed_lists = Post.objects.filter(author=usernames)
-        feed.append(feed_lists)
-
-    feed_list = list(chain(*feed))
-    feed_list.sort(key=lambda x: x.created_at, reverse=False)
-
-    full_post_list = []
-    comments_list = []
-    for post in feed_list:
-        comments_set = Comment.objects.filter(post=post).order_by('created_at')
-        comments_list.append(comments_set)
-        comments_list_final = list(chain(*comments_list))
-        comments_list_final.sort(key=lambda x: x.created_at, reverse=False)
-        full_post_list.append(PostFull(post, comments_list_final[-4:]))
-        comments_list.clear()
-
-    # creating the suggestions list
-    all_users = User.objects.all()
-    user_following_all = []
-
-    for user in user_following:
-        user_list = User.objects.get(username=user.followee)
-        user_following_all.append(user_list)
-
-    new_suggestions_list = [x for x in list(
-        all_users) if (x not in list(user_following_all))]
-    current_user = User.objects.filter(username=request.user.username)
-    final_suggestions_list = [x for x in list(
-        new_suggestions_list) if (x not in list(current_user))]
-    random.shuffle(final_suggestions_list)
-
-    username_profile_list = []
-
-    username_profile = [users.id for users in final_suggestions_list]
-    for ids in username_profile:
-        profile_lists = Profile.objects.filter(user=ids)
-        username_profile_list.append(profile_lists)
-
-    suggestions_username_profile_list = list(chain(*username_profile_list))
-
-    if post_id := request.POST.get("post-id2"):
-        if request.method == "POST":
-            post = Post.objects.filter(id=post_id).first()
-            post.delete()
-            return redirect(reverse('/search/'))
-
-    return render(request, 'main/home.html', {"posts": full_post_list, 'suggestions_username_profile_list': suggestions_username_profile_list[:4]})
 
 
 @login_required(login_url="/login")
