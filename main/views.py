@@ -8,7 +8,7 @@ from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect, reverse
 from django.db.models import Count
 from .models import Post, Profile, Followers, Comment, PostFull, Activity, MyCsv
-from .forms import RegisterForm, PostForm, ProfileForm, ActivityForm, UpdateUserForm, CsvForm
+from .forms import RegisterForm, PostForm, ProfileForm, ActivityForm, UpdateUserForm, CsvForm, CommentForm
 from itertools import chain
 import os
 import random
@@ -42,6 +42,7 @@ def register(request):
     return render(request, 'registration/register.html', {"form": form})
 
 # created with refacting used in register
+
 
 def _extracted_from_register_5(form, request):
     password = form.cleaned_data.get('password1')
@@ -114,6 +115,8 @@ def home(request):
 
     return render(request, 'main/home.html', {"posts": full_post_list, 'suggestions_username_profile_list': suggestions_username_profile_list[:4]})
 
+
+
 def search(request):
     username_profile = []
     username_profile_list = []
@@ -178,7 +181,7 @@ def profile(request, pk):
             post = Post.objects.filter(id=post_id).first()
             if post and (post.author == request.user):
                 post.delete()
-                return redirect(reverse('home'))
+                return redirect(request.META.get('HTTP_REFERER'))
 
     return render(request, 'main/profile.html', context)
 
@@ -186,25 +189,32 @@ def profile(request, pk):
 def post_page(request, pk):
     post_obj = Post.objects.get(id=pk)
     user = request.user
-
-    if request.method == 'POST' and 'comment_text' in request.POST:
-        if comment_text := request.POST['comment_text']:
-            comment_object = Comment.objects.create(
-                post=post_obj, author=user, text=comment_text)
-            comment_object.save()
+    
+    if request.method == 'POST':
+        form = CommentForm(request.POST, request.FILES)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.author = user
+            comment.post = post_obj
+            comment.save()
             return redirect(request.META.get('HTTP_REFERER'))
+    else:
+        form = CommentForm()
+
 
     if request.method == 'POST' and 'comment_id' in request.POST:
         if comment_id := request.POST.get("comment_id"):
             comment = Comment.objects.filter(id=comment_id).first()
             if comment and (comment.author == user):
                 comment.delete()
+                return redirect(request.META.get('HTTP_REFERER'))
 
     comments_list = Comment.objects.filter(post=post_obj)
 
     context = {
         'post_obj': post_obj,
         'comments_list': comments_list,
+        'form': form,
     }
 
     return render(request, 'main/post_page.html', context)
@@ -222,7 +232,7 @@ def delete_post_as_admin(request):
     if post_id := request.POST.get("post-id"):
         post = Post.objects.filter(id=post_id).first()
         post.delete()
-        return redirect("/home")
+        return redirect(request.META.get('HTTP_REFERER'))
 
     return render(request, "main/home.html", {})
 
@@ -233,7 +243,7 @@ def delete_comment_as_admin(request):
         if comment_id := request.POST.get("comment_id_admin"):
             comment = Comment.objects.filter(id=comment_id).first()
             comment.delete()
-            return redirect("/home")
+            return redirect(request.META.get('HTTP_REFERER'))
 
         return render(request, "main/home.html", {})
 
@@ -247,7 +257,7 @@ def create_post(request):
             post.author = request.user
 
             post.save()
-            return redirect("/home")
+            return redirect('/profile/' + request.user.username)
     else:
         form = PostForm()
 
@@ -522,7 +532,7 @@ def show_report2(request):
     })
 
     # Represent only large countries
-    df.loc[df['Time in minutes'] < 10,
+    df.loc[df['Time in minutes'] < 30,
            'Activity Categories'] = 'Other Activities'
     fig = px.pie(df, names='Activity Categories',
                  values='Time in minutes', color='Activity Categories')

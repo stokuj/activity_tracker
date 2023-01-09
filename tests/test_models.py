@@ -104,12 +104,20 @@ class BaseActivityModel(TestCase):
         
         cls.activity1 = Activity(activity_name="TestActivity1", author=cls.user, activity_category='Swimming', created_at = models.DateTimeField(auto_now_add=True))
         cls.activity1.save()
+        cls.activity2 = Activity(activity_name="TestActivity2", author=cls.user, activity_category='', created_at = models.DateTimeField(auto_now_add=True))
+        cls.activity2.save()
         
-        
-class CreateSingleActivity1Test(BaseActivityModel):
-    def test_created_properly(self):
+class CreateSingleActivityTest(BaseActivityModel):
+    def test_created_properly1(self):
         
         self.assertNotEqual(self.user.username,     '')
         self.assertEqual(self.user.username,        'UserForsTestingActivities')
         self.assertEqual(self.activity1.activity_name,   'TestActivity1')
-     
+        self.assertEqual(self.activity1.activity_category,   'Swimming')
+        
+    def test_created_properly2(self):
+        
+        self.assertNotEqual(self.user.username,     '')
+        self.assertEqual(self.user.username,        'UserForsTestingActivities')
+        self.assertEqual(self.activity2.activity_name,   'TestActivity2')
+        self.assertNotEqual(self.activity2.activity_category,   'Swimming')

@@ -13,7 +13,7 @@
 
 
 <div class="profile-img">
-    <img src="{{user_profile.profileimg.url}}" width="250" height="250">
+    <img src="{{user_profile.profileimg.url}}" width="180" height="180">
 </div>
 
 {% if user.is_authenticated %}
@@ -58,7 +58,7 @@
                     {% if user == post.post.author %}
                     <form method="post">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" name="comment-id" value="{{post.post.id}}"> Delete post </button>
+                        <button type="submit" class="btn btn-danger" name="post-id" value="{{post.post.id}}"> Delete post </button>
                     </form>
                     {% else %}
                         <div> 

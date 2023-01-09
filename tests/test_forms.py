@@ -28,11 +28,9 @@ class YourTestClass(TestCase):
     @classmethod
     def setUpTestData(cls):
         print("setUpTestData: Run once to set up non-modified data for all class methods.")
-        pass
 
     def setUp(self):
         print("setUp: Run once for every test method to setup clean data.")
-        pass
 
     def test_false_is_false(self):
         print("Method: test_false_is_false.")
@@ -111,8 +109,7 @@ class EmptyEmailTest(TestCase):
         self.assertEqual(response.status_code, 200)
         users = get_user_model().objects.all()
         self.assertEqual(users.count(), number_of_users_in_db)
-        
-        
+               
 class CreateTwoAccountsTest(TestCase):
     def setUp(self) -> None:
         #1st
@@ -182,7 +179,6 @@ class CreateTwoIdenticalAccountsTest(TestCase):
         users = get_user_model().objects.all()
         self.assertEqual(users.count(), number_of_users_in_db+1)
         
-
 class CreateUserWithEmailAsPasswordTest(TestCase):
     def setUp(self) -> None:
         self.username = 'testuser1111'

@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Post, Profile, Activity, MyCsv
+from .models import Post, Profile, Activity, MyCsv, Comment
 import os
 from django.core.exceptions import ValidationError
 
@@ -41,6 +41,14 @@ class RegisterForm(UserCreationForm):
 
 
 class PostForm(forms.ModelForm):
+    text = forms.RegexField(
+        min_length=4,
+        max_length=500,
+        regex=r'^(?=.{1,500}$)[\w\s]{1,40}(?:[\s]+[\w\s]{1,40}){0,12}$',
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+        error_messages={'invalid': ("Max number of characters: 500. Max number of charcters for each world: 40")}
+    )
+    
     class Meta:
         model = Post
         fields = ["text"]
@@ -89,6 +97,18 @@ class UpdateUserForm(forms.ModelForm):
         model = User
         fields = ['username', 'email', 'first_name', 'last_name']
 
+class CommentForm(forms.ModelForm):
+    text = forms.RegexField(
+        min_length=4,
+        max_length=100,
+        regex=r'^(?=.{1,100}$)[\w\s]{1,30}(?:[\s]+[\w\s]{1,30}){0,2}$',
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 1}),
+        error_messages={'invalid': ("Max number of characters: 100. Max number of charcters for each world: 30")}
+    )
+    
+    class Meta:
+        model = Comment
+        fields = ["text"]
 
 class CsvForm(forms.ModelForm):
     file_name = forms.FileField(max_length=100, validators=[
