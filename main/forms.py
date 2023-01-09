@@ -44,7 +44,7 @@ class PostForm(forms.ModelForm):
     text = forms.RegexField(
         min_length=4,
         max_length=500,
-        regex=r'^(?=.{1,500}$)[\w\s]{1,40}(?:[\s]+[\w\s]{1,40}){0,12}$',
+        regex=r'^(?=.{1,500}$).{1,40}(?:.{1,40}){0,12}$',
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
         error_messages={'invalid': ("Max number of characters: 500. Max number of charcters for each world: 40")}
     )
@@ -101,7 +101,7 @@ class CommentForm(forms.ModelForm):
     text = forms.RegexField(
         min_length=4,
         max_length=100,
-        regex=r'^(?=.{1,100}$)[\w\s]{1,30}(?:[\s]+[\w\s]{1,30}){0,2}$',
+        regex=r'^(?=.{1,100}$).{1,30}(?:.{1,30}){0,2}$',
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 1}),
         error_messages={'invalid': ("Max number of characters: 100. Max number of charcters for each world: 30")}
     )
