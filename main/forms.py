@@ -16,15 +16,15 @@ def validate_file_extension(value):
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(required=True, )
     first_name = forms.RegexField(
-        min_length=4,
-        max_length=12,
-        regex=r'^([a-zA-Z]+?)([-\s\'][a-zA-Z]+)*?$',
+        min_length=2,
+        max_length=30,
+        regex=r'^([A-Z][a-z]+)(?: [A-Z][a-z]+)?$',
         error_messages={'invalid': ("Wrong first name format!")}
     )
     last_name = forms.RegexField(
-        min_length=4,
-        max_length=12,
-        regex=r'^([a-zA-Z]+?)([-\s\'][a-zA-Z]+)*?$',
+        min_length=2,
+        max_length=30,
+        regex=r"^[A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*(?:[-][A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*)*(?:['][A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*)*$",
         error_messages={'invalid': ("Wrong last name format!")}
     )
 
@@ -63,7 +63,7 @@ class ActivityForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     profileimg = forms.ImageField(required=False, widget=forms.FileInput(
         attrs={'class': 'form-control-file'}))
-    userText = forms.CharField(required=False, widget=forms.Textarea(
+    userText = forms.CharField(required=False,max_length=200, widget=forms.Textarea(
         attrs={'class': 'form-control', 'rows': 5}))
     isPrivate = forms.BooleanField(required=False)
 
@@ -80,16 +80,16 @@ class UpdateUserForm(forms.ModelForm):
                              widget=forms.TextInput(attrs={'class': 'form-control'}))
     first_name = forms.RegexField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        min_length=4,
-        max_length=12,
-        regex=r'^([a-zA-Z]+?)([-\s\'][a-zA-Z]+)*?$',
+        min_length=2,
+        max_length=30,
+        regex=r'^([A-Z][a-z]+)(?: [A-Z][a-z]+)?$',
         error_messages={'invalid': ("Wrong first name format!")}
     )
     last_name = forms.RegexField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
-        min_length=4,
-        max_length=12,
-        regex=r'^([a-zA-Z]+?)([-\s\'][a-zA-Z]+)*?$',
+        min_length=2,
+        max_length=30,
+        regex=r"^[A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*(?:[-][A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*)*(?:['][A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*)*$",
         error_messages={'invalid': ("Wrong last name format!")}
     )
 

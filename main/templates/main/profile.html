@@ -10,11 +10,28 @@
 <div class="uname">
     {{user_obj.username}}
 </div>
+<div class="container text-center">
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="profile-img">
+                <img src="{{user_profile.profileimg.url}}" width="180" height="180">
+            </div>
+        </div>
+        <div class="col-lg-10"> 
+            <div class="card border-1">
+                <div class="card-body">
+                    {% if user.is_authenticated %}
+                    {{user_profile.userText}}
+                    {% else %}
+                    {% endif %}
+                </div>
+              </div>
+        </div>
+    </div>
+  </div>
 
 
-<div class="profile-img">
-    <img src="{{user_profile.profileimg.url}}" width="180" height="180">
-</div>
+
 
 {% if user.is_authenticated %}
 <div class="following">

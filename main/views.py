@@ -140,7 +140,7 @@ def profile(request, pk):
 
     try:
         user_profile = Profile.objects.get(user=user_obj)
-    except:
+    except Exception:
         new_profile = Profile.objects.create(user=user_obj)
         new_profile.save()
         user_profile = Profile.objects.get(user=user_obj)
@@ -293,8 +293,6 @@ def create_activity(request):
                 form = PostForm()
                 post = form.save(commit=False)
                 delta = activity.activity_duration
-                # text = request.POST['Textarea1']
-                # print(text)
                 post.text = "I was " + activity.activity_category + \
                     " for " + humanfriendly.format_timespan(delta)
                 post.author = request.user
@@ -508,40 +506,41 @@ def show_report(request):
 
 @login_required(login_url="/login")
 def show_report2(request):
+    try:
+        user_obj = User.objects.get(username=request.user)
+        list_of_categories = ['Swimming', 'Yoga', 'Running', 'Snowboarding',
+                            'Push-ups', 'Walking', 'Surfing', 'Diving', 'Cycling', 'Climbing Stairs']
+        cat_dur = [0,      0,         0,              0,          0,
+                0,         0,        0,         0,                 0]
 
-    user_obj = User.objects.get(username=request.user)
-    list_of_categories = ['Swimming', 'Yoga', 'Running', 'Snowboarding',
-                          'Push-ups', 'Walking', 'Surfing', 'Diving', 'Cycling', 'Climbing Stairs']
-    cat_dur = [0,      0,         0,              0,          0,
-               0,         0,        0,         0,                 0]
+        for x in range(10):
+            list_of_activities = Activity.objects.filter(
+                author_id=user_obj.id, activity_category=list_of_categories[x])
 
-    for x in range(10):
-        list_of_activities = Activity.objects.filter(
-            author_id=user_obj.id, activity_category=list_of_categories[x])
+            for i in list_of_activities:
+                delta = i.activity_duration
+                # days to sec to mins
+                cat_dur[x] += round(((delta.days * 24 * 60 *
+                                    60) + delta.seconds)/60)
 
-        for i in list_of_activities:
-            delta = i.activity_duration
-            # days to sec to mins
-            cat_dur[x] += round(((delta.days * 24 * 60 *
-                                60) + delta.seconds)/60)
+        #
+        df = pd.DataFrame({
+            'Activity Categories': ['Swimming',    'Yoga',    'Running',  'Snowboarding',    'Push-ups',  'Walking',  'Surfing',   'Diving',  'Cycling', 'Climbing Stairs'],
+            'Time in minutes': [cat_dur[0], cat_dur[1],   cat_dur[2],      cat_dur[3],    cat_dur[4], cat_dur[5], cat_dur[6], cat_dur[7], cat_dur[8],        cat_dur[9]]
+        })
 
-    #
-    df = pd.DataFrame({
-        'Activity Categories': ['Swimming',    'Yoga',    'Running',  'Snowboarding',    'Push-ups',  'Walking',  'Surfing',   'Diving',  'Cycling', 'Climbing Stairs'],
-        'Time in minutes': [cat_dur[0], cat_dur[1],   cat_dur[2],      cat_dur[3],    cat_dur[4], cat_dur[5], cat_dur[6], cat_dur[7], cat_dur[8],        cat_dur[9]]
-    })
+        # Represent only large countries
+        df.loc[df['Time in minutes'] < 30,
+            'Activity Categories'] = 'Other Activities'
+        fig = px.pie(df, names='Activity Categories',
+                    values='Time in minutes', color='Activity Categories')
+        plot_div = plot(fig, output_type='div')
+        #
 
-    # Represent only large countries
-    df.loc[df['Time in minutes'] < 30,
-           'Activity Categories'] = 'Other Activities'
-    fig = px.pie(df, names='Activity Categories',
-                 values='Time in minutes', color='Activity Categories')
-    plot_div = plot(fig, output_type='div')
-    #
-
-    list_of_activities = Activity.objects.filter(author_id=user_obj.id)
-    return render(request, 'main/show_report2.html', context={'plot_div': plot_div, "list_of_activities": list_of_activities})
-
+        list_of_activities = Activity.objects.filter(author_id=user_obj.id)
+        return render(request, 'main/show_report2.html', context={'plot_div': plot_div, "list_of_activities": list_of_activities})
+    except Exception:
+        print("Exception")
 
 @login_required(login_url="/login")
 def upload(request):
@@ -563,7 +562,7 @@ def upload(request):
                     activity = Activity(pk=row[0], activity_name=row[1], activity_category=row[2],
                                         author=thisUser, created_at=row[4], activity_duration=row[5])
                     activity.save()
-            except:
+            except Exception:
                 print("An exception occurred")
                 MyCsv.objects.all().delete()
 
