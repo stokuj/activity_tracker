@@ -3,66 +3,87 @@
 
 {% csrf_token %}
 <br>
+
 {% if user.is_superuser %}
-<H1>You are logged as Administrator!</H1>
+<div class="card mt-2">
+    <div class="card-header">
+        <H3>You are logged as Administrator!</H3>
+    </div>
+</div>
 {% else %}
 {% endif %}
-<div class="uname">
-    {{user_obj.username}}
-</div>
-<div class="container text-center">
-    <div class="row">
-        <div class="col-lg-2">
-            <div class="profile-img">
-                <img src="{{user_profile.profileimg.url}}" width="180" height="180">
+
+<div class="card mt-4">
+	<div class="card-header">
+        <div class="uname">
+            {{user_obj.username}}
+        </div>
+	</div>
+	<div class="card-body d-flex flex-row justify-content-between">
+        <div class="container text-center">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="profile-img">
+                        <img src="{{user_profile.profileimg.url}}" width="180" height="180">
+                    </div>
+                </div>
+                <div class="col-lg-10"> 
+                    <div class="card border-1">
+                        <div class="card-body">
+                            {% if user.is_authenticated %}
+                                {{user_profile.userText}}
+                            {% else %}
+                                {% if user_obj.profile.isPrivate %}
+                                    User has private profile!
+                                {% else %}
+                                    {{user_profile.userText}}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                      </div>
+                </div>
             </div>
         </div>
-        <div class="col-lg-10"> 
-            <div class="card border-1">
-                <div class="card-body">
-                    {% if user.is_authenticated %}
-                    {{user_profile.userText}}
+	</div>
+    {% if user.is_authenticated %}
+        <div class="card-footer text-muted">
+            <div class="following">
+                <form action="/follow" method="post">
+                    {% csrf_token %}
+                    {% if user_followers == 0 or user_followers == 1 %}
+                        {{user_followers}} follower
                     {% else %}
+                        {{user_followers}} followers
                     {% endif %}
-                </div>
-              </div>
+            
+                    {{user_following}} following
+                    
+                    <input type="hidden" value="{{user.username}}" name="follower" />
+                    <input type="hidden" value="{{user_profile}}" name="user_prof" />
+                    {% if user_obj.username == user.username %}
+                    {% else %}
+                    <button type="submit" style="background-color: #ffc0cb; border: #ffc0cb;">{{button_text}}</button>
+                    {% endif %}
+                </form>
+            </div>  
         </div>
-    </div>
-  </div>
-
-
-
-
+    {% else %}
+    {% endif %}
+</div>
+<br>
 {% if user.is_authenticated %}
-<div class="following">
-    <form action="/follow" method="post">
-        {% csrf_token %}
-        {% if user_followers == 0 or user_followers == 1 %}
-            {{user_followers}} follower
-        {% else %}
-            {{user_followers}} followers
-        {% endif %}
-
-        {{user_following}} following
-        
-        <input type="hidden" value="{{user.username}}" name="follower" />
-        <input type="hidden" value="{{user_profile}}" name="user_prof" />
-        <br>
-        <br>
-        {% if user_obj.username == user.username %}
-        <a href="/account_settings/" class="btn btn-dark btn-lg">Account Settings</a>
-        <a href="/update_profile/" class="btn btn-dark btn-lg">Update Profile</a>
-        <a href="/password-change/" class="btn btn-dark btn-lg">Change password</a>
-        {% else %}
-        <button type="submit" style="background-color: #ffc0cb; border: #ffc0cb;">{{button_text}}</button>
-        {% endif %}
-    </form>
-</div>  
+    {% if user_obj.username == user.username %}
+    <a href="/account_settings/" class="btn btn-dark btn-lg">Account Settings</a>
+    <a href="/update_profile/" class="btn btn-dark btn-lg">Update Profile</a>
+    <a href="/password-change/" class="btn btn-dark btn-lg">Change password</a>
+    {% else %}
+    {% endif %}
 {% else %}
 {% endif %}
+
 <hr>
 <div class="uname">
-    {% if user_obj.profile.isPrivate == False or user.is_authenticated  %}
+    {% if user_obj.profile.isPrivate == False or user.is_superuser  %}
         {% for post in posts reversed%}
         <div class="card mt-2">
             <div class="card-header"><strong>@{{post.post.author.username}}</strong></div>

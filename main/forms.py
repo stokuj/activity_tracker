@@ -18,13 +18,13 @@ class RegisterForm(UserCreationForm):
     first_name = forms.RegexField(
         min_length=2,
         max_length=30,
-        regex=r'^([A-Z][a-z]+)(?: [A-Z][a-z]+)?$',
+        regex=r'^[^\d!@#$%^&*(),+=.;:\"\'-]{1,30}$',
         error_messages={'invalid': ("Wrong first name format!")}
     )
     last_name = forms.RegexField(
         min_length=2,
         max_length=30,
-        regex=r"^[A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*(?:[-][A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*)*(?:['][A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*)*$",
+        regex=r"^[^\d!@#$%^&*(),]{1,30}$",
         error_messages={'invalid': ("Wrong last name format!")}
     )
 
@@ -44,7 +44,7 @@ class PostForm(forms.ModelForm):
     text = forms.RegexField(
         min_length=4,
         max_length=500,
-        regex=r'^(?=\b.{1,500}\b)(?:\b\w{1,25}\b)(?:\s+(?:\b\w{1,25}\b))*$',
+        regex=r'^(?:.{1,25})(?:\s+(?:.{1,25})){0,100}$',
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
         error_messages={'invalid': ("Max number of characters: 500. Max number of charcters for each world: 25")}
     )
@@ -82,14 +82,14 @@ class UpdateUserForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         min_length=2,
         max_length=30,
-        regex=r'^([A-Z][a-z]+)(?: [A-Z][a-z]+)?$',
+        regex=r'^[^\d!@#$%^&*(),+=.;:\"\'-]{1,30}$',
         error_messages={'invalid': ("Wrong first name format!")}
     )
     last_name = forms.RegexField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
         min_length=2,
         max_length=30,
-        regex=r"^[A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*(?:[-][A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*)*(?:['][A-Za-zÀ-ÖØ-öø-ÿ][a-zA-ZÀ-ÖØ-öø-ÿ]*)*$",
+        regex=r"^[^\d!@#$%^&*(),]{1,30}$",
         error_messages={'invalid': ("Wrong last name format!")}
     )
 
@@ -101,11 +101,10 @@ class CommentForm(forms.ModelForm):
     text = forms.RegexField(
         min_length=4,
         max_length=100,
-        regex=r'^(?=\b.{1,100}\b)(?:\b\w{1,25}\b)(?:\s+(?:\b\w{1,25}\b))*$',
+        regex=r'^(?:.{1,25})(?:\s+(?:.{1,25})){0,3}$',
         widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 1}),
         error_messages={'invalid': ("Max number of characters: 100. Max number of charcters for each world: 25")}
     )
-    
     class Meta:
         model = Comment
         fields = ["text"]
