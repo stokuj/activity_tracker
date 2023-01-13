@@ -14,12 +14,12 @@
 {% endif %}
 
 <div class="card mt-4">
-	<div class="card-header">
+    <div class="card-header">
         <div class="uname">
             {{user_obj.username}}
         </div>
-	</div>
-	<div class="card-body d-flex flex-row justify-content-between">
+    </div>
+    <div class="card-body d-flex flex-row justify-content-between">
         <div class="container text-center">
             <div class="row">
                 <div class="col-lg-2">
@@ -40,11 +40,11 @@
                                 {% endif %}
                             {% endif %}
                         </div>
-                      </div>
+                    </div>
                 </div>
             </div>
         </div>
-	</div>
+    </div>
     {% if user.is_authenticated %}
         <div class="card-footer text-muted">
             <div class="following">
@@ -83,7 +83,7 @@
 
 <hr>
 <div class="uname">
-    {% if user_obj.profile.isPrivate == False or user.is_superuser  %}
+    {% if user_obj.profile.isPrivate == False or user.is_superuser or user_obj.username == user.username %}
         {% for post in posts reversed%}
         <div class="card mt-2">
             <div class="card-header"><strong>@{{post.post.author.username}}</strong></div>
