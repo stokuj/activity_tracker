@@ -123,7 +123,7 @@ if 'DYNO' in os.environ:
     DATABASE_URL =  dj_database_url.config(conn_max_age=600)
     DATABASES['default'].update(DATABASE_URL)
     
-    DEBUG = False
+    DEBUG = True
     SITE_ID = 3
 else:
     print("Not running on Heroku")
