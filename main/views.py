@@ -145,6 +145,15 @@ def profile(request, pk):
         new_profile.save()
         user_profile = Profile.objects.get(user=user_obj)
 
+    try:
+        avatar_path = user_profile.profileimg.path
+        if not os.path.isfile(avatar_path):
+            print("Avatar file not found!")
+            user_profile.profileimg = "default_profile_image.jpg"
+            
+    except Exception as e:
+        print(f'Error: {e}')
+
     posts = Post.objects.filter(author_id=user_obj.id)
     posts.order_by('created_at')
 
