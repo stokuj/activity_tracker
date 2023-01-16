@@ -150,6 +150,7 @@ def profile(request, pk):
         if not os.path.isfile(avatar_path):
             print("Avatar file not found!")
             user_profile.profileimg = "default_profile_image.jpg"
+            user_profile.save()
             
     except Exception as e:
         print(f'Error: {e}')
