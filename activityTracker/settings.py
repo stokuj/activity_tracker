@@ -10,13 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-
 from pathlib import Path
 import os
-
-is_heroku = False
-if 'DATABASE_URL' in os.environ:
-    is_heroku = True
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,8 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^jr$u=e4*0!zkkv1-m8@5_1$5xq-*1@!z#&tgasv*lr4v-8la6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver','activity-tracker.herokuapp.com']
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'testserver', 'activity-tracker.herokuapp.com']
 if os.environ.get("DJANGO_ALLOWED_HOSTS") is not None:
     ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 # Application definition
@@ -120,17 +117,14 @@ DATABASES = {
     }
 }
 
-if is_heroku:
-    #print("Heroku detected")
-    DEBUG = False
+if 'DYNO' in os.environ:
+    print("Running on Heroku")
     import dj_database_url
     DATABASE_URL =  dj_database_url.config(conn_max_age=600)
     DATABASES['default'].update(DATABASE_URL)
-
 else:
-    print("Heroku not detected")
-    DEBUG = True
-    
+    print("Not running on Heroku")
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
