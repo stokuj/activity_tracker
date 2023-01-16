@@ -1,134 +1,134 @@
-{% extends 'main/base.html' %} {% block title %}{{user.username}} Profile Page{% endblock %}
-{% block content %}
+    {% extends 'main/base.html' %} {% block title %}{{user.username}} Profile Page{% endblock %}
+    {% block content %}
 
-{% csrf_token %}
-<br>
+    {% csrf_token %}
+    <br>
 
-{% if user.is_superuser %}
-<div class="card mt-2">
-    <div class="card-header">
-        <H3>You are logged as Administrator!</H3>
-    </div>
-</div>
-{% else %}
-{% endif %}
-
-<div class="card mt-4">
-    <div class="card-header">
-        <div class="uname">
-            {{user_obj.username}}
+    {% if user.is_superuser %}
+    <div class="card mt-2">
+        <div class="card-header">
+            <H3>You are logged as Administrator!</H3>
         </div>
     </div>
-    <div class="card-body d-flex flex-row justify-content-between">
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-lg-2">
-                    <div class="profile-img">
-                        <img src="{{user_profile.profileimg.url}}" width="180" height="180">
+    {% else %}
+    {% endif %}
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="uname">
+                {{user_obj.username}}
+            </div>
+        </div>
+        <div class="card-body d-flex flex-row justify-content-between">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="profile-img">
+                            <img src="{{user_profile.profileimg.url}}" width="180" height="180">
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-10"> 
-                    <div class="card border-1">
-                        <div class="card-body">
-                            {% if user.is_authenticated %}
-                                {{user_profile.userText}}
-                            {% else %}
-                                {% if user_obj.profile.isPrivate %}
-                                    User has private profile!
-                                {% else %}
+                    <div class="col-lg-10"> 
+                        <div class="card border-1">
+                            <div class="card-body">
+                                {% if user.is_authenticated %}
                                     {{user_profile.userText}}
+                                {% else %}
+                                    {% if user_obj.profile.isPrivate %}
+                                        User has private profile!
+                                    {% else %}
+                                        {{user_profile.userText}}
+                                    {% endif %}
                                 {% endif %}
-                            {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    {% if user.is_authenticated %}
-        <div class="card-footer text-muted">
-            <div class="following">
-                <form action="/follow" method="post">
-                    {% csrf_token %}
-                    {% if user_followers == 0 or user_followers == 1 %}
-                        {{user_followers}} follower
-                    {% else %}
-                        {{user_followers}} followers
-                    {% endif %}
-            
-                    {{user_following}} following
-                    
-                    <input type="hidden" value="{{user.username}}" name="follower" />
-                    <input type="hidden" value="{{user_profile}}" name="user_prof" />
-                    {% if user_obj.username == user.username %}
-                    {% else %}
-                    <button type="submit" style="background-color: #ffc0cb; border: #ffc0cb;">{{button_text}}</button>
-                    {% endif %}
-                </form>
-            </div>  
-        </div>
-    {% else %}
-    {% endif %}
-</div>
-<br>
-{% if user.is_authenticated %}
-    {% if user_obj.username == user.username %}
-    <a href="/account_settings/" class="btn btn-dark btn-lg">Account Settings</a>
-    <a href="/update_profile/" class="btn btn-dark btn-lg">Update Profile</a>
-    <a href="/password-change/" class="btn btn-dark btn-lg">Change password</a>
-    {% else %}
-    {% endif %}
-{% else %}
-{% endif %}
-
-<hr>
-<div class="uname">
-    {% if user_obj.profile.isPrivate == False or user.is_superuser or user_obj.username == user.username %}
-        {% for post in posts reversed%}
-        <div class="card mt-2">
-            <div class="card-header"><strong>@{{post.post.author.username}}</strong></div>
-            <div class="card-body d-flex flex-row justify-content-between">
-                <div>
-                    <a href="/post_page/{{post.post.id}}">\-></a><h5 class="card-title">{{post.post.text}}</h5>
-                    <br />
-                </div>
-                <div> 
-                    {% if user == post.post.author %}
-                    <form method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" name="post-id" value="{{post.post.id}}"> Delete post </button>
-                    </form>
-                    {% else %}
-                        <div> 
-                            {% if user.is_superuser %}
-                            <form action="{% url 'downloadexcel2' %}" method="post">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger" name="post-id" value="{{post.post.id}}">Delete post as admin</button>
-                            </form>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-
-                </div>
-            </div>
-            <div>
-                {% for comment in post.comments_list%}
-                <div class="card mt-2 d-flex flex-row justify-content-between">
-                    <div class="card-header"><a href="/profile/{{comment.author}}" ><strong>@{{comment.author}}</strong></a></div>
-                        <h5 class="card-title">{{comment.text}}</h5>
-                        <br />
-                </div>
-                {% endfor %}
-            </div>
+        {% if user.is_authenticated %}
             <div class="card-footer text-muted">
-                {{post.post.created_at}}
+                <div class="following">
+                    <form action="/follow" method="post">
+                        {% csrf_token %}
+                        {% if user_followers == 0 or user_followers == 1 %}
+                            {{user_followers}} follower
+                        {% else %}
+                            {{user_followers}} followers
+                        {% endif %}
+                
+                        {{user_following}} following
+                        
+                        <input type="hidden" value="{{user.username}}" name="follower" />
+                        <input type="hidden" value="{{user_profile}}" name="user_prof" />
+                        {% if user_obj.username == user.username %}
+                        {% else %}
+                        <button type="submit" style="background-color: #ffc0cb; border: #ffc0cb;">{{button_text}}</button>
+                        {% endif %}
+                    </form>
+                </div>  
             </div>
-        </div> 
-        {% empty %}
-        <p>No posts yet</p>
-        {% endfor %}
+        {% else %}
+        {% endif %}
+    </div>
+    <br>
+    {% if user.is_authenticated %}
+        {% if user_obj.username == user.username %}
+        <a href="/account_settings/" class="btn btn-dark btn-lg">Account Settings</a>
+        <a href="/update_profile/" class="btn btn-dark btn-lg">Update Profile</a>
+        <a href="/password-change/" class="btn btn-dark btn-lg">Change password</a>
+        {% else %}
+        {% endif %}
     {% else %}
-        This profile is private!
     {% endif %}
-</div>
-{% endblock %}
+
+    <hr>
+    <div class="uname">
+        {% if user_obj.profile.isPrivate == False or user.is_superuser or user_obj.username == user.username %}
+            {% for post in posts reversed%}
+            <div class="card mt-2">
+                <div class="card-header"><strong>@{{post.post.author.username}}</strong></div>
+                <div class="card-body d-flex flex-row justify-content-between">
+                    <div>
+                        <a href="/post_page/{{post.post.id}}">\-></a><h5 class="card-title">{{post.post.text}}</h5>
+                        <br />
+                    </div>
+                    <div> 
+                        {% if user == post.post.author %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger" name="post-id" value="{{post.post.id}}"> Delete post </button>
+                        </form>
+                        {% else %}
+                            <div> 
+                                {% if user.is_superuser %}
+                                <form action="{% url 'downloadexcel2' %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-danger" name="post-id" value="{{post.post.id}}">Delete post as admin</button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+                <div>
+                    {% for comment in post.comments_list%}
+                    <div class="card mt-2 d-flex flex-row justify-content-between">
+                        <div class="card-header"><a href="/profile/{{comment.author}}" ><strong>@{{comment.author}}</strong></a></div>
+                            <h5 class="card-title">{{comment.text}}</h5>
+                            <br />
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="card-footer text-muted">
+                    {{post.post.created_at}}
+                </div>
+            </div> 
+            {% empty %}
+            <p>No posts yet</p>
+            {% endfor %}
+        {% else %}
+            This profile is private!
+        {% endif %}
+    </div>
+    {% endblock %}

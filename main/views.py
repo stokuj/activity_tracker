@@ -35,7 +35,7 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            return _extracted_from_register_5(form, request)
+            return create(form, request)
     else:
         form = RegisterForm()
 
@@ -44,7 +44,7 @@ def register(request):
 # created with refacting used in register
 
 
-def _extracted_from_register_5(form, request):
+def create(form, request):
     password = form.cleaned_data.get('password1')
     username = form.cleaned_data.get('username')
     last_name = form.cleaned_data.get('last_name')
@@ -293,6 +293,8 @@ def create_activity(request):
                 form = PostForm()
                 post = form.save(commit=False)
                 delta = activity.activity_duration
+                # text = request.POST['Textarea1']
+                # print(text)
                 post.text = "I was " + activity.activity_category + \
                     " for " + humanfriendly.format_timespan(delta)
                 post.author = request.user
