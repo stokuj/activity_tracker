@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
-
 from pathlib import Path
 import os
 
@@ -25,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-^jr$u=e4*0!zkkv1-m8@5_1$5xq-*1@!z#&tgasv*lr4v-8la6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-
+DEBUG = True
 
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'activity-tracker.herokuapp.com']
@@ -38,14 +37,14 @@ if os.environ.get("DJANGO_ALLOWED_HOSTS") is not None:
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 INSTALLED_APPS = [
-
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    
     "django.contrib.sites", # <--
     "allauth", # <--
     "allauth.account", # <--
@@ -120,17 +119,15 @@ DATABASES = {
 
 if 'DYNO' in os.environ:
     print("Running on Heroku")
-
+    
     import dj_database_url
     DATABASE_URL =  dj_database_url.config(conn_max_age=600)
     DATABASES['default'].update(DATABASE_URL)
-
-    DEBUG = False
+    
     SITE_ID = 3
 else:
     print("Not running on Heroku")
-
-    DEBUG = True
+    
     SITE_ID = 2
 
 # Password validation
@@ -166,28 +163,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-if DEBUG:
-    MEDIA_URL = '/static/media/'
-    STATICFILES_DIRS=[
-         os.path.join(BASE_DIR,'static')
-    ]
-    STATIC_ROOT='/home/username/websitedomain/static'
-    MEDIA_ROOT='/home/username/websitedomain/static/media'
-else:
-    MEDIA_URL='static/media/'
-    STATIC_ROOT=os.path.join(BASE_DIR,'static')
-    MEDIA_ROOT=os.path.join(BASE_DIR,'static/media/')
+
+STATIC_URL = 'static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), ) 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 
-
-STATIC_URL = '/static/'
-#STATIC_URL = 'static/'
-#STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), ) 
-#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-
-#MEDIA_URL = '/media/' 
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/' 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = "/home"
 AUTO_LOGOUT = {'IDLE_TIME': 300}  # logout after 5 minutes of downtime
