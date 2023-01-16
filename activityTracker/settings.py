@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'activityTracker',
     'crispy_forms',
     'crispy_bootstrap5',
-
+    'django_extensions',
 ]
 
 SOCIALACCOUNT_PROVIDERS = {
