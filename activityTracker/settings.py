@@ -123,11 +123,11 @@ if 'DYNO' in os.environ:
     import dj_database_url
     DATABASE_URL =  dj_database_url.config(conn_max_age=600)
     DATABASES['default'].update(DATABASE_URL)
-    DEBUG = False
+
     SITE_ID = 3
 else:
     print("Not running on Heroku")
-    DEBUG = True
+
     SITE_ID = 2
 
 # Password validation
@@ -164,18 +164,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-if DEBUG:
-    MEDIA_URL = '/static/media/'
-    STATICFILES_DIRS=[
-         os.path.join(BASE_DIR,'static')
-    ]
-    STATIC_ROOT=os.path.join(BASE_DIR,'static')
-    MEDIA_ROOT=os.path.join(BASE_DIR,'static/media/')
+STATIC_URL = 'static/'
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), ) 
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-else:
-    MEDIA_URL='static/media/'
-    STATIC_ROOT=os.path.join(BASE_DIR,'static')
-    MEDIA_ROOT=os.path.join(BASE_DIR,'static/media/')
+
+MEDIA_URL = '/media/' 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = "/home"
 AUTO_LOGOUT = {'IDLE_TIME': 300}  # logout after 5 minutes of downtime
