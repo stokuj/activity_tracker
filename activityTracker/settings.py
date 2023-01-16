@@ -37,6 +37,8 @@ if os.environ.get("DJANGO_ALLOWED_HOSTS") is not None:
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
 INSTALLED_APPS = [
+    'whitenoise.runserver_nostatic',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
