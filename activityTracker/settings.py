@@ -117,9 +117,13 @@ DATABASES = {
     }
 }
 
-import dj_database_url
-DATABASE_URL =  dj_database_url.config(conn_max_age=600)
-DATABASES['default'].update(DATABASE_URL)
+if 'DYNO' in os.environ:
+    print("Running on Heroku")
+    import dj_database_url
+    DATABASE_URL =  dj_database_url.config(conn_max_age=600)
+    DATABASES['default'].update(DATABASE_URL)
+else:
+    print("Not running on Heroku")
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
