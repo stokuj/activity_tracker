@@ -71,6 +71,7 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 MIDDLEWARE = [
+    "allauth.account.middleware.AccountMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -111,7 +112,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'activityDB2', 
         'USER': 'postgres',
-        'PASSWORD': '1569',
+        'PASSWORD': 'NstftHLz',
         'HOST': '127.0.0.1', 
         'PORT': '5432',
     }
@@ -181,3 +182,9 @@ AUTHENTICATION_BACKENDS = (
    "django.contrib.auth.backends.ModelBackend",
    "allauth.account.auth_backends.AuthenticationBackend",
 )
+
+
+# pozwala używać tylko tego jednego packa
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+# domyślny pack
+CRISPY_TEMPLATE_PACK = "bootstrap5"

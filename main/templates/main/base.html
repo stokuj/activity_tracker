@@ -48,9 +48,11 @@
                 </ul>
               </li>
               <span class ="navbar-text"> | </span>
-              <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
-              </li>
+ <li class="nav-item">
+  <form method="post" action="{% url 'account_logout' %}">
+    {% csrf_token %}
+    <button class="nav-link btn btn-link" type="submit" style="padding: 0; border: none; background: none;">Logout</button>
+  </form>
               
             </ul>
           </div>
