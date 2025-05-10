@@ -45,7 +45,7 @@ if 'DYNO' in os.environ:
 
 ## 📷 Zrzuty ekranu
 
-> _Można tutaj dodać screeny logowania, panelu użytkownika, wykresów itd._
+TO DO
 
 ## 👥 Role użytkowników
 
