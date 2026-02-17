@@ -12,24 +12,38 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+import psycopg2
+from django.db import OperationalError
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
+
+
+def env_bool(name, default=False):
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^jr$u=e4*0!zkkv1-m8@5_1$5xq-*1@!z#&tgasv*lr4v-8la6'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-dev-only")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env_bool("DJANGO_DEBUG", True)
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'activity-tracker.herokuapp.com']
-if os.environ.get("DJANGO_ALLOWED_HOSTS") is not None:
-    ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = [
+    host.strip() for host in os.getenv(
+        "DJANGO_ALLOWED_HOSTS",
+        "localhost,127.0.0.1,activity-tracker.herokuapp.com",
+    ).split(",") if host.strip()
+]
 # Application definition
 
 
@@ -110,11 +124,11 @@ WSGI_APPLICATION = 'activityTracker.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'activityDB2', 
-        'USER': 'postgres',
-        'PASSWORD': 'NstftHLz',
-        'HOST': '127.0.0.1', 
-        'PORT': '5432',
+        'NAME': os.getenv('DB_NAME', 'activityDB2'),
+        'USER': os.getenv('DB_USER', 'postgres'),
+        'PASSWORD': os.getenv('DB_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', '127.0.0.1'),
+        'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
 
@@ -128,8 +142,27 @@ if 'DYNO' in os.environ:
     SITE_ID = 3
 else:
     print("Not running on Heroku")
-
     SITE_ID = 2
+
+
+# Fail fast if local PostgreSQL is missing/unreachable.
+if 'DYNO' not in os.environ:
+    try:
+        conn = psycopg2.connect(
+            dbname=DATABASES['default']['NAME'],
+            user=DATABASES['default']['USER'],
+            password=DATABASES['default']['PASSWORD'],
+            host=DATABASES['default']['HOST'],
+            port=DATABASES['default']['PORT'],
+            connect_timeout=3,
+        )
+        conn.close()
+    except psycopg2.OperationalError as exc:
+        raise OperationalError(
+            "Database connection failed. "
+            "Check DB_NAME/DB_USER/DB_PASSWORD/DB_HOST/DB_PORT in .env. "
+            f"Original error: {exc}"
+        ) from exc
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
