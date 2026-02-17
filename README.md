@@ -40,7 +40,7 @@ A full-featured web application built with Django that allows users to track the
 
 3. Install dependencies:
    ```bash
-   pip install -r requirements.txt
+   uv sync
    ```
 
 4. Run database migrations:
