@@ -28,58 +28,25 @@ A Django web application for tracking physical activity, sharing posts, and gene
 ## Quick Start (uv)
 
 1. Clone the repository:
-```bash
-git clone https://github.com/your-account/activity_tracker.git
-cd activity_tracker
-```
 
-2. Create environment file from template:
-```powershell
-Copy-Item .env.example .env
-```
-```bash
-cp .env.example .env
-```
-
-3. Create PostgreSQL database (name must match `DB_NAME` in `.env`):
+2. Create PostgreSQL database (name must match `DB_NAME` in `.env`):
 ```sql
-CREATE DATABASE activityDB2;
+CREATE DATABASE activityDB;
 ```
 
-4. Update `.env` with your local PostgreSQL credentials.
+3. Create `.env` with your local PostgreSQL credentials.
+Look at `.env.example`
 
-5. Install dependencies:
+4. Install dependencies:
 ```bash
 uv sync
 ```
 
-6. Run migrations:
+5. Run migrations and run server
 ```bash
 uv run python manage.py migrate
+uv run python manage.py runserver
 ```
-
-7. Start development server:
-```bash
-uv run python manage.py runserver 127.0.0.1:8000
-```
-
-If port `8000` is busy, run on another port, for example:
-```bash
-uv run python manage.py runserver 127.0.0.1:8001
-```
-
-## Environment Variables
-
-The project uses `.env` (loaded from the project root). Start from `.env.example`.
-
-- `DJANGO_SECRET_KEY`
-- `DJANGO_DEBUG`
-- `DJANGO_ALLOWED_HOSTS` (comma-separated, e.g. `localhost,127.0.0.1`)
-- `DB_NAME`
-- `DB_USER`
-- `DB_PASSWORD`
-- `DB_HOST`
-- `DB_PORT`
 
 ## Database Behavior
 
