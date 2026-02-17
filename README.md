@@ -11,6 +11,14 @@ A Django web application for tracking physical activity, sharing posts, and gene
 - Activity reports with Plotly charts
 - Profile privacy and account settings
 
+## Use Cases
+
+- As a user, I track my physical activity by creating entries with category and duration.
+- As a user, I review my progress by generating charts and activity reports.
+- As a user, I share updates by publishing posts and adding comments.
+- As a user, I discover other people by searching profiles and following accounts.
+- As a user, I keep my data portable by exporting and importing activities via CSV.
+
 ## Tech Stack
 
 - Python 3.10
@@ -58,3 +66,8 @@ If the database is missing or credentials are invalid, startup fails with `djang
 ```bash
 uv run python manage.py test
 ```
+
+## License
+
+MIT License. See `LICENSE`.
+This project is for educational purposes. It was built to practice Django web development, PostgreSQL integration, authentication flows, and basic product design patterns.
