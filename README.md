@@ -40,13 +40,9 @@ CREATE DATABASE activityDB;
 3. Create `.env` with your local PostgreSQL credentials.
 Look at `.env.example`
 
-4. Install dependencies:
+4. Install dependencies and run server
 ```bash
 uv sync
-```
-
-5. Run migrations and run server
-```bash
 uv run python manage.py migrate
 uv run python manage.py runserver
 ```
