@@ -1,6 +1,6 @@
 # Activity Tracker
 
-A Django web application for tracking physical activity, sharing posts, and generating activity statistics.
+A web application for tracking physical activity, sharing posts, and generating activity statistics.
 
 ## Features
 
@@ -26,14 +26,9 @@ A Django web application for tracking physical activity, sharing posts, and gene
 - PostgreSQL
 - uv (dependency and environment management)
 - Plotly, Pandas, Crispy Forms
+- Bootstrap
 
-## Prerequisites
-
-- Python 3.10
-- PostgreSQL server running locally
-- uv installed (`pip install uv`)
-
-## Quick Start (uv)
+## How to install
 
 1. Clone the repository:
 
@@ -56,16 +51,9 @@ uv run python manage.py migrate
 uv run python manage.py runserver
 ```
 
-## Database Behavior
+## Showcase
+<img width="2275" height="1442" alt="activity_chart" src="https://github.com/user-attachments/assets/f1bb348f-d656-46f0-84ec-ede13c7bc4aa" />
 
-The application validates PostgreSQL connection at startup in local mode.
-If the database is missing or credentials are invalid, startup fails with `django.db.utils.OperationalError`.
-
-## Tests
-
-```bash
-uv run python manage.py test
-```
 
 ## License
 
