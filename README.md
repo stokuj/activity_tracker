@@ -48,7 +48,15 @@ uv run python manage.py runserver
 ```
 
 ## Showcase
+User can register on the register page.
 <img width="2275" height="1442" alt="activity_chart" src="https://github.com/user-attachments/assets/f1bb348f-d656-46f0-84ec-ede13c7bc4aa" />
+
+User can add new activities with a name, category, and time.
+All validations are included
+<img width="2275" height="1356" alt="activity_list" src="https://github.com/user-attachments/assets/28f8585a-58ab-41d9-b5c8-75a2cfd41612" />
+
+User can view and generate charts based on his activities. He can download them and upload from csv.
+<img width="2275" height="1442" alt="activity_chart" src="https://github.com/user-attachments/assets/a07a0d9f-c4d7-4293-962f-b8e6035417e3" />
 
 
 ## License
