@@ -1,4 +1,5 @@
 from typing import List
+from django.apps import apps
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django.contrib import messages
@@ -13,7 +14,7 @@ from itertools import chain
 import os
 import random
 from django.urls import reverse_lazy
-from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.views import PasswordChangeView, LoginView
 from django.contrib.messages.views import SuccessMessageMixin
 import humanfriendly
 from django.http import HttpResponse
@@ -30,6 +31,33 @@ from csv import reader
 # Loggin not nedded
 ###########################################################################################
 
+def google_oauth_enabled():
+    required_apps = (
+        "allauth",
+        "allauth.socialaccount",
+        "allauth.socialaccount.providers.google",
+    )
+    if not all(apps.is_installed(app_name) for app_name in required_apps):
+        return False
+
+    try:
+        from allauth.socialaccount.models import SocialApp
+        from django.contrib.sites.models import Site
+
+        site = Site.objects.get_current()
+        return SocialApp.objects.filter(provider="google", sites=site).exists()
+    except Exception:
+        return False
+
+
+class LocalLoginView(LoginView):
+    template_name = "registration/login.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["google_oauth_enabled"] = google_oauth_enabled()
+        return context
+
 
 def register(request):
     if request.method == 'POST':
@@ -39,7 +67,11 @@ def register(request):
     else:
         form = RegisterForm()
 
-    return render(request, 'registration/register.html', {"form": form})
+    return render(
+        request,
+        'registration/register.html',
+        {"form": form, "google_oauth_enabled": google_oauth_enabled()},
+    )
 
 # created with refacting used in register
 

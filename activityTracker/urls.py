@@ -18,10 +18,12 @@ from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
 from django.contrib.auth.views import LogoutView
+from main.views import LocalLoginView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main.urls')),
+    path('login/', LocalLoginView.as_view(), name='login'),
     path('', include('django.contrib.auth.urls')),
     path('accounts/', include('allauth.urls')),
     path('logout/', LogoutView.as_view()),

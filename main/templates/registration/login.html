@@ -8,9 +8,11 @@
 <button type="submit" class="btn btn-dark btn-lg">Login</button>
 </form>
 
-<br>
-<br>
+{% if google_oauth_enabled %}
 {% load socialaccount %}
+<br>
+<br>
 <a href="{% provider_login_url 'google' %}"> <button type="button" class="btn btn-primary">Use Google</button></a>
+{% endif %}
 
 {% endblock %}
