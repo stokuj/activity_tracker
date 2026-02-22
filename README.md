@@ -2,7 +2,7 @@
 
 A web application for tracking physical activity, sharing posts, and generating activity statistics.
 Django, PostgreSQL for storing user data and Bootstrap for simple frontend.
-Plotly used for interactive graphs of user data inside app.
+Plotly used for interactive graphs of user data inside app. Tested using GH Actions and Selenium
 
 ## Project Files
 
@@ -10,9 +10,20 @@ Plotly used for interactive graphs of user data inside app.
 |-- pyproject.toml
 |-- uv.lock
 |-- .env.example
-|-- activityTracker/
+|-- .github/workflows/django.yml        # CI pipeline
+|-- activityTracker/                    # Django configuration
 |-- main/
-|-- tests/
+|   |-- admin.py
+|   |-- apps.py
+|   |-- forms.py # Django forms
+|   |-- models.py # database models
+|   |-- urls.py # app URL routes
+|   |-- views.py # request handlers
+|   |-- migrations/
+|   `-- templates/
+|       |-- main/                       # templates for app pages
+|       `-- registration/               # login/register pages
+|-- tests/                              # automated tests
 |-- manage.py
 ```
 
@@ -35,16 +46,17 @@ Plotly used for interactive graphs of user data inside app.
 
 ## Tech Stack
 
-- Python 3.10
-- Django 5
-- PostgreSQL
-- uv (dependency and environment management)
-- Plotly, Pandas, Crispy Forms
-- Bootstrap
+- Python 3.10       language
+- Django 5          main framework
+- PostgreSQL        storing user data
+- Plotly, Pandas    interactive charts
+- Bootstrap         simple frontend
+- Selenium          for automated project testing
+- GH Actions        for CI/CD development/testing
 
 ## How to install
 
-1. Clone the repository:
+1. Clone the repository
 
 2. Create PostgreSQL database (name must match `DB_NAME` in `.env`):
 ```sql
