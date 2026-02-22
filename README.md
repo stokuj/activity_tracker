@@ -1,6 +1,20 @@
 # Activity Tracker
 
 A web application for tracking physical activity, sharing posts, and generating activity statistics.
+Django, PostgreSQL for storing user data and Bootstrap for simple frontend.
+Plotly used for interactive graphs of user data inside app.
+
+## Project Files
+
+```text
+|-- pyproject.toml
+|-- uv.lock
+|-- .env.example
+|-- activityTracker/
+|-- main/
+|-- tests/
+|-- manage.py
+```
 
 ## Features
 
